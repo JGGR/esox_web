@@ -40,6 +40,14 @@ Anagrafica HFBI:
 <pre id="out_hfbi"></pre>
 
 </br>
+<input type="button" value="Change Locale" id="locale_button">
+<pre id="out_locale"></pre>
+</br>
+<input type="button" value="Change Headers" id="headers_button">
+<pre id="out_headers"></pre>
+</br>
+
+</br>
 <div id="msg-box"></div>
 
 <script type="module">
@@ -51,8 +59,10 @@ Anagrafica HFBI:
 
   const out_niseci = document.getElementById("out_niseci");
   const out_hfbi = document.getElementById("out_hfbi");
-  const is_italian = true;
-  const has_headers = true;
+  var is_italian = true;
+  var has_headers = true;
+  const out_locale = document.getElementById("out_locale");
+  const out_headers = document.getElementById("out_headers");
   const msgBox = document.getElementById("msg-box");
 
   // Initial render
@@ -63,6 +73,32 @@ Anagrafica HFBI:
   async function readFile(input) {
     if (!input.files || input.files.length === 0) return null;
     return await input.files[0].text();
+  }
+
+  function renderLocale() {
+    out_locale.textContent =
+      is_italian
+        ? "Italian"
+        : "International";
+  }
+
+  function renderHeaders() {
+    out_headers.textContent =
+      has_headers
+        ? "Yes"
+        : "No";
+  }
+
+  renderLocale();
+  renderHeaders();
+  document.getElementById("locale_button").onclick = () => {
+    is_italian = !is_italian;
+    renderLocale();
+  }
+
+  document.getElementById("headers_button").onclick = () => {
+    has_headers = !has_headers;
+    renderHeaders();
   }
 
   document.getElementById("run_niseci").onclick = async () => {
