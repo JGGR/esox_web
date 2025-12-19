@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <style>
-    #error-box {
+    #msg-box {
       max-height: 200px;
       overflow-y: auto;
       border: 1px solid #ccc;
@@ -40,25 +40,24 @@ Anagrafica HFBI:
 <pre id="out_hfbi"></pre>
 
 </br>
-<h2>Errors</h2>
-<div id="error-box"></div>
+<div id="msg-box"></div>
 
 <script type="module">
   import init, { calc_niseci_italian, calc_hfbi_italian } from "https://unpkg.com/esox_wasm@0.1.1/esox_wasm.js";
 
   await init(); // load .wasm
 
-  const errors = [];
+  const messages = [];
 
   const out_niseci = document.getElementById("out_niseci");
   const out_hfbi = document.getElementById("out_hfbi");
   const is_italian = true;
   const has_headers = true;
-  const errorBox = document.getElementById("error-box");
+  const msgBox = document.getElementById("msg-box");
 
   // Initial render
-  function renderErrors() {
-    errorBox.textContent = errors.join("\n");
+  function renderMsgs() {
+    msgBox.textContent = messages.join("\n");
   }
 
   async function readFile(input) {
@@ -67,8 +66,8 @@ Anagrafica HFBI:
   }
 
   document.getElementById("run_niseci").onclick = async () => {
-    errors.length = 0;
-    renderErrors();
+    messages.length = 0;
+    renderMsgs();
     const t1 = await readFile(document.getElementById("rif_niseci"));
     const t2 = await readFile(document.getElementById("camp_niseci"));
     const t3 = await readFile(document.getElementById("anag_niseci"));
@@ -84,18 +83,50 @@ Anagrafica HFBI:
           result === undefined
             ? "Calculation failed"
             : `Result: ${result.valore}`;
+        messages.push(`Result: ${result.valore}`);
+        messages.push(`Rqe: ${result.rqe}`);
+        Object.getOwnPropertyNames(result.valori_intermedi).forEach(name => {
+            if (name != "specie_specifici") {
+              messages.push(`${name}, ${result.valori_intermedi[name]}`);
+            } else {
+              messages.push(`Specie Specifici:`);
+              messages.push(`-----------------`);
+              for (const [key, value] of result.valori_intermedi.specie_specifici.entries()) {
+                messages.push(`Specie: ${key}`);
+                Object.getOwnPropertyNames(value).forEach(name => {
+                  if (name != "classi_eta") {
+                    messages.push(`${name}, ${value[name]}`);
+                  } else {
+                    Object.getOwnPropertyNames(value[name]).forEach(name_cl => {
+                      if (name_cl != "specie") {
+                        messages.push(`${name_cl}, ${value[name][name_cl]}`);
+                      } else {
+                        Object.getOwnPropertyNames(value[name][name_cl]).forEach(name_sp => {
+                          messages.push(`${name_sp}, ${value[name][name_cl][name_sp]}`);
+                        });
+                      }
+                    });
+                  }
+                });
+                messages.push(`-----------------`);
+              }
+              messages.push(`-----------------`);
+            }
+        });
+        renderMsgs();
+        msgBox.scrollTop = msgBox.scrollHeight;
     } catch (errs) {
         for (const e of errs) {
           console.error(e);
-          errors.push(e);
+          messages.push(e);
         }
-        renderErrors();
-        errorBox.scrollTop = errorBox.scrollHeight;
+        renderMsgs();
+        msgBox.scrollTop = msgBox.scrollHeight;
     }
   };
   document.getElementById("run_hfbi").onclick = async () => {
-    errors.length = 0;
-    renderErrors();
+    messages.length = 0;
+    renderMsgs();
     const t1 = await readFile(document.getElementById("camp_hfbi"));
     const t2 = await readFile(document.getElementById("anag_hfbi"));
 
@@ -111,13 +142,19 @@ Anagrafica HFBI:
           result === undefined
             ? "Calculation failed"
             : `Result: ${result.valore}`;
+        messages.push(`Result: ${result.valore}`);
+        Object.getOwnPropertyNames(result.intermediates).forEach(name => {
+            messages.push(`${name}, ${result.intermediates[name]}`);
+        });
+        renderMsgs();
+        msgBox.scrollTop = msgBox.scrollHeight;
     } catch (errs) {
         for (const e of errs) {
           console.error(e);
-          errors.push(e);
+          messages.push(e);
         }
-        renderErrors();
-        errorBox.scrollTop = errorBox.scrollHeight;
+        renderMsgs();
+        msgBox.scrollTop = msgBox.scrollHeight;
     }
   };
 </script>
