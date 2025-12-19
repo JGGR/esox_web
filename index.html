@@ -85,8 +85,10 @@ Anagrafica HFBI:
             ? "Calculation failed"
             : `Result: ${result}`;
     } catch (errs) {
-        console.error(errs);
-        errors.push(errs);
+        for (const e of errs) {
+          console.error(e);
+          errors.push(e);
+        }
         renderErrors();
         errorBox.scrollTop = errorBox.scrollHeight;
     }
@@ -110,8 +112,10 @@ Anagrafica HFBI:
             ? "Calculation failed"
             : `Result: ${result}`;
     } catch (errs) {
-        console.error(errs);
-        errors.push(errs);
+        for (const e of errs) {
+          console.error(e);
+          errors.push(e);
+        }
         renderErrors();
         errorBox.scrollTop = errorBox.scrollHeight;
     }
