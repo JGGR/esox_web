@@ -1,54 +1,207 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
+
   <style>
-    #msg-box {
-      max-height: 200px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --border: #d0d7de;
+      --accent: #2563eb;
+      --muted: #6b7280;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: #111827;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .field {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .field label {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    input[type="file"] {
+      font-size: 0.9rem;
+    }
+
+    .actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    button,
+    input[type="button"] {
+      padding: 6px 14px;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover,
+    input[type="button"]:hover {
+      filter: brightness(0.95);
+    }
+
+    .output {
+      margin-top: 10px;
       padding: 8px;
-      background: #f8f8f8;
-      font-family: monospace;
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      min-height: 1.2em;
+    }
+
+    .settings {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .setting {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    #msg-box {
+      max-height: 260px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      padding: 10px;
+      background: #0f172a;
+      color: #e5e7eb;
+      font-family: var(--mono);
+      font-size: 0.85rem;
       white-space: pre-wrap;
+      border-radius: 6px;
+    }
+
+    .log-title {
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: var(--muted);
     }
   </style>
 </head>
+
 <body>
 
-Riferimento NISECI:
-<input type="file" id="rif_niseci">
-</br>
-Campionamento NISECI:
-<input type="file" id="camp_niseci">
-</br>
-Anagrafica NISECI:
-<input type="file" id="anag_niseci">
-</br>
-<button id="run_niseci">Run</button>
-</br>
-<pre id="out_niseci"></pre>
+<div class="container">
 
-Campionamento HFBI:
-<input type="file" id="camp_hfbi">
-</br>
-Anagrafica HFBI:
-<input type="file" id="anag_hfbi">
-</br>
-<button id="run_hfbi">Run</button>
-</br>
-<pre id="out_hfbi"></pre>
+  <!-- NISECI -->
+  <div class="card">
+    <h2>NISECI</h2>
 
-</br>
-<input type="button" value="Change Locale" id="locale_button">
-<pre id="out_locale"></pre>
-</br>
-<input type="button" value="Change Headers" id="headers_button">
-<pre id="out_headers"></pre>
-</br>
+    <div class="field">
+      <label for="rif_niseci">Riferimento NISECI</label>
+      <input type="file" id="rif_niseci">
+    </div>
 
-</br>
-<div id="msg-box"></div>
+    <div class="field">
+      <label for="camp_niseci">Campionamento NISECI</label>
+      <input type="file" id="camp_niseci">
+    </div>
+
+    <div class="field">
+      <label for="anag_niseci">Anagrafica NISECI</label>
+      <input type="file" id="anag_niseci">
+    </div>
+
+    <div class="actions">
+      <button id="run_niseci">Run NISECI</button>
+    </div>
+
+    <pre class="output" id="out_niseci"></pre>
+  </div>
+
+  <!-- HFBI -->
+  <div class="card">
+    <h2>HFBI</h2>
+
+    <div class="field">
+      <label for="camp_hfbi">Campionamento HFBI</label>
+      <input type="file" id="camp_hfbi">
+    </div>
+
+    <div class="field">
+      <label for="anag_hfbi">Anagrafica HFBI</label>
+      <input type="file" id="anag_hfbi">
+    </div>
+
+    <div class="actions">
+      <button id="run_hfbi">Run HFBI</button>
+    </div>
+
+    <pre class="output" id="out_hfbi"></pre>
+  </div>
+
+  <!-- Settings -->
+  <div class="card">
+    <h2>Settings</h2>
+
+    <div class="settings">
+      <div class="setting">
+        <input type="button" value="Change Locale" id="locale_button">
+        <pre class="output" id="out_locale"></pre>
+      </div>
+
+      <div class="setting">
+        <input type="button" value="Change Headers" id="headers_button">
+        <pre class="output" id="out_headers"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Log -->
+  <div class="card">
+    <div class="log-title">Messages</div>
+    <div id="msg-box"></div>
+  </div>
+
+</div>
 
 <script type="module">
   import init, { calc_niseci_italian, calc_hfbi_italian } from "https://unpkg.com/esox_wasm@0.1.1/esox_wasm.js";
