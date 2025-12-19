@@ -44,7 +44,7 @@ Anagrafica HFBI:
 <div id="error-box"></div>
 
 <script type="module">
-  import init, { calc_niseci_italian, calc_hfbi_italian } from "https://unpkg.com/esox_wasm@0.1.0/esox_wasm.js";
+  import init, { calc_niseci_italian, calc_hfbi_italian } from "https://unpkg.com/esox_wasm@0.1.1/esox_wasm.js";
 
   await init(); // load .wasm
 
@@ -83,7 +83,7 @@ Anagrafica HFBI:
         out_niseci.textContent =
           result === undefined
             ? "Calculation failed"
-            : `Result: ${result}`;
+            : `Result: ${result.valore}`;
     } catch (errs) {
         for (const e of errs) {
           console.error(e);
@@ -110,7 +110,7 @@ Anagrafica HFBI:
         out_hfbi.textContent =
           result === undefined
             ? "Calculation failed"
-            : `Result: ${result}`;
+            : `Result: ${result.valore}`;
     } catch (errs) {
         for (const e of errs) {
           console.error(e);
