@@ -19,7 +19,7 @@ You can find templates for the input files in the `templates` folder.
 
 ## Testing <a name = "testing"></a>
 
-To test `pkg/.wasm` file, run:
+To test, run:
 ```sh
     python -m http.server
 ```

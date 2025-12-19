@@ -2,6 +2,17 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <style>
+    #error-box {
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 8px;
+      background: #f8f8f8;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
 
@@ -28,15 +39,27 @@ Anagrafica HFBI:
 </br>
 <pre id="out_hfbi"></pre>
 
+</br>
+<h2>Errors</h2>
+<div id="error-box"></div>
+
 <script type="module">
-  import init, { calc_niseci_italian, calc_hfbi_italian } from "https://unpkg.com/:esox_wasm@:0.1.0/:esox_wasm.js";
+  import init, { calc_niseci_italian, calc_hfbi_italian } from "https://unpkg.com/esox_wasm@0.1.0/esox_wasm.js";
 
   await init(); // load .wasm
+
+  const errors = [];
 
   const out_niseci = document.getElementById("out_niseci");
   const out_hfbi = document.getElementById("out_hfbi");
   const is_italian = true;
   const has_headers = true;
+  const errorBox = document.getElementById("error-box");
+
+  // Initial render
+  function renderErrors() {
+    errorBox.textContent = errors.join("\n");
+  }
 
   async function readFile(input) {
     if (!input.files || input.files.length === 0) return null;
@@ -44,6 +67,8 @@ Anagrafica HFBI:
   }
 
   document.getElementById("run_niseci").onclick = async () => {
+    errors.length = 0;
+    renderErrors();
     const t1 = await readFile(document.getElementById("rif_niseci"));
     const t2 = await readFile(document.getElementById("camp_niseci"));
     const t3 = await readFile(document.getElementById("anag_niseci"));
@@ -59,12 +84,16 @@ Anagrafica HFBI:
           result === undefined
             ? "Calculation failed"
             : `Result: ${result}`;
-    } catch (errors) {
-        console.error(errors);
+    } catch (errs) {
+        console.error(errs);
+        errors.push(errs);
+        renderErrors();
+        errorBox.scrollTop = errorBox.scrollHeight;
     }
-
   };
   document.getElementById("run_hfbi").onclick = async () => {
+    errors.length = 0;
+    renderErrors();
     const t1 = await readFile(document.getElementById("camp_hfbi"));
     const t2 = await readFile(document.getElementById("anag_hfbi"));
 
@@ -80,8 +109,11 @@ Anagrafica HFBI:
           result === undefined
             ? "Calculation failed"
             : `Result: ${result}`;
-    } catch (errors) {
-        console.error(errors);
+    } catch (errs) {
+        console.error(errs);
+        errors.push(errs);
+        renderErrors();
+        errorBox.scrollTop = errorBox.scrollHeight;
     }
   };
 </script>
