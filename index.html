@@ -192,6 +192,12 @@
         <input type="button" value="Change Headers" id="headers_button">
         <pre class="output" id="out_headers"></pre>
       </div>
+      <div class="setting">
+        <pre class="output" id="out_version"></pre>
+      </div>
+      <div class="setting">
+        <pre class="output" id="out_esox_version"></pre>
+      </div>
     </div>
   </div>
 
@@ -204,7 +210,7 @@
 </div>
 
 <script type="module">
-  import init, { calc_niseci_italian, calc_hfbi_italian } from "https://unpkg.com/esox_wasm@0.1.3/esox_wasm.js";
+  import init, { calc_niseci_italian, calc_hfbi_italian, get_version, get_esox_version } from "https://unpkg.com/esox_wasm@0.1.3/esox_wasm.js";
 
   await init(); // load .wasm
 
@@ -216,6 +222,8 @@
   var has_headers = true;
   const out_locale = document.getElementById("out_locale");
   const out_headers = document.getElementById("out_headers");
+  const out_version = document.getElementById("out_version");
+  const out_esox_version = document.getElementById("out_esox_version");
   const msgBox = document.getElementById("msg-box");
 
   // Initial render
@@ -242,8 +250,24 @@
         : "No";
   }
 
+  function renderVersions() {
+    try {
+      out_version.textContent =
+        `esox_wasm: ${get_version()}`;
+    } catch (e) {
+      out_version.textContent = "Version info unavailable";
+    }
+    try {
+      out_esox_version.textContent =
+        `esox: ${get_esox_version()}`;
+    } catch (e) {
+      out_esox_version.textContent = "Version info unavailable";
+    }
+  }
+
   renderLocale();
   renderHeaders();
+  renderVersions();
   document.getElementById("locale_button").onclick = () => {
     is_italian = !is_italian;
     renderLocale();
