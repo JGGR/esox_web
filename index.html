@@ -196,10 +196,6 @@
       <div class="setting">
         <pre class="output" id="out_version"></pre>
       </div>
-
-      <div class="setting">
-        <pre class="output" id="out_esox_version"></pre>
-      </div>
     </div>
   </div>
 
@@ -212,7 +208,7 @@
 </div>
 
 <script type="module">
-  import init, { calc_niseci_italian, calc_hfbi_italian, get_version, get_esox_version } from "https://unpkg.com/esox_wasm@0.1.4/esox_wasm.js";
+  import init, { calc_niseci_italian, calc_hfbi_italian, get_version, get_esox_version } from "https://unpkg.com/esox_wasm@0.1.5/esox_wasm.js";
 
   await init(); // load .wasm
 
@@ -225,7 +221,6 @@
   const out_locale = document.getElementById("out_locale");
   const out_headers = document.getElementById("out_headers");
   const out_version = document.getElementById("out_version");
-  const out_esox_version = document.getElementById("out_esox_version");
   const msgBox = document.getElementById("msg-box");
 
   // Initial render
@@ -255,15 +250,9 @@
   function renderVersions() {
      try {
        out_version.textContent =
-         `esox_wasm: ${get_version()}`;
+         `esox_wasm: ${get_version()} (Using esox ${get_esox_version()})`;
      } catch (e) {
        out_version.textContent = "Version info unavailable";
-     }
-     try {
-       out_esox_version.textContent =
-         `esox: ${get_esox_version()}`;
-     } catch (e) {
-       out_esox_version.textContent = "Version info unavailable";
      }
    }
 
